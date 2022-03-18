@@ -1,0 +1,55 @@
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.grid-row-start {
+    border-top: 1px solid;
+}
+.grid-row {
+    display: flex;
+    flex-direction: row;
+}
+
+.grid-row-bottom-border-weight-1 {
+    border-bottom: 1px solid black;
+}
+.grid-row-end .grid-col {
+    border-bottom: 2px solid black;
+}
+
+.grid-col {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    border-top: 1px solid black;
+    border-left: 1px solid;
+}
+
+.grid-col-start {
+    border-left: 2px solid black;
+}
+.grid-col-right-border-weight-1 {
+    border-right: 1px solid black;
+}
+
+
+.grid-col-end {
+    border-right: 2px solid black;
+}
+
+.grid-col input {
+    text-align: center;
+    display: flex;
+    outline: none;
+    width: 100%;
+    font-size: 18px;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    border: none;
+}

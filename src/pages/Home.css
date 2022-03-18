@@ -1,0 +1,26 @@
+button {
+    margin: 0 2px;
+    cursor: pointer;
+}
+
+.answeritem {display: inline-block;margin: 4px 6px;padding-top: 18px;position: relative}
+.answeritem::before {
+    content: attr(data-time);
+    font-size:13.333px;
+    position: absolute;
+    left: 0;
+    top: 0
+}
+.answeritem-row {clear: both;}
+.answeritem-col {
+    margin: -1px 0 0 -1px;
+    float: left;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    border: 1px solid gray;
+    line-height: 15px;
+    display: inline-block;
+    font-size: 13px;}
+.spp {margin: -1px;}
+.soo {border-bottom: 1px solid gray;}
