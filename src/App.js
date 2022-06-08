@@ -4,6 +4,9 @@ import About from "./pages/About";
 import './App.css';
 
 function App() {
+
+  window.sudoWw = new Worker("/SudoSolver.js");
+
   return (
     <div className="App">
       <header className="App-header">

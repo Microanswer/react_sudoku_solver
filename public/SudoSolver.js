@@ -1,12 +1,11 @@
-let GET_VALUE_BY_RANDOM = 1;
-let GET_VALUE_BY_ORDER = 2;
-
-let inner_run_dely = 0;
-
-let STATUS_KEEPGOING = 1;
-let STATUS_BACK = 2;
-let List = function () {
-    let obj = {};
+var self = this;
+var GET_VALUE_BY_RANDOM = 1;
+var GET_VALUE_BY_ORDER = 2;
+var inner_run_dely = 1;
+var STATUS_KEEPGOING = 1;
+var STATUS_BACK = 2;
+var List = function () {
+    var obj = {};
     obj._data = [];
 
     obj.add = function (value) {
@@ -17,7 +16,7 @@ let List = function () {
         return obj._data.shift();
     };
     obj.removeRandom = function () {
-        let index = Math.floor(Math.random() * (obj._data.length));
+        var index = Math.floor(Math.random() * (obj._data.length));
         return obj._data.splice(index, 1)[0];
     };
 
@@ -26,8 +25,8 @@ let List = function () {
     };
 
     obj.remove = function (value) {
-        let index = -1;
-        for (let i = 0; i < obj._data.length; i++) {
+        var index = -1;
+        for (var i = 0; i < obj._data.length; i++) {
             if (value === obj._data[i]) {
                 index = i;
                 break;
@@ -41,8 +40,8 @@ let List = function () {
     };
 
     obj.contains = function (value) {
-        let index = -1;
-        for (let i = 0; i < obj._data.length; i++) {
+        var index = -1;
+        for (var i = 0; i < obj._data.length; i++) {
             if (value === obj._data[i]) {
                 index = i;
                 break;
@@ -77,13 +76,13 @@ function SudoSolver(sudo) {
             [0, 0, 0, 0, 0, 0, 0, 0, 0]];
     }
 
-    let obj = {};
+    var obj = {};
 
     obj.copyArray = function (srcArray) {
-        let newArray = [];
-        for (let i = 0; i < srcArray.length; i++) {
-            let array = [];
-            for (let j = 0; j < srcArray[i].length; j++) {
+        var newArray = [];
+        for (var i = 0; i < srcArray.length; i++) {
+            var array = [];
+            for (var j = 0; j < srcArray[i].length; j++) {
                 array[j] = srcArray[i][j];
             }
             newArray[i] = array;
@@ -119,9 +118,9 @@ function SudoSolver(sudo) {
     obj.findAnswer = function (solverListener) {
         obj.setSudoSolverListener(solverListener);
 
-        let tryHistory = List();
+        var tryHistory = List();
 
-        let tempSudo = obj.copyArray(obj.originSudo);
+        var tempSudo = obj.copyArray(obj.originSudo);
 
         obj.lastAnswer = null;
 
@@ -137,100 +136,105 @@ function SudoSolver(sudo) {
 
     };
     obj.__innerRun = function () {
-        let tryHistory = obj.__innerRunnParam.tryHistory;
-        let status = obj.__innerRunnParam.status;
-        let tempSudo = obj.__innerRunnParam.tempSudo;
-        let kill = obj.__innerRunnParam.kill;
-        if (kill) {
-            obj.onflish();
-            return;
-        }
-
-        let ij = null;
-
-        if (STATUS_KEEPGOING === status) {
-            ij = obj.getNextEmptyPosition(tempSudo);
-        } else if (STATUS_BACK === status) {
-            ij = tryHistory.get(tryHistory.size() - 1);
-        }
-
-        if (ij) {
-
-            if (status === STATUS_KEEPGOING) {
-                let nextNumber = ij.nextNumber();
-                if (null == nextNumber) {
-                    if (obj.sudoIsTrue(tempSudo)) {
-
-                    } else {
-                        status = STATUS_BACK;
-                    }
-                } else {
-                    tempSudo[ij.i][ij.j] = nextNumber;
-                    tryHistory.add(ij);
-                }
-
-            } else if (status === STATUS_BACK) {
-
-                let number = ij.nextNumber();
-
-                if (null == number) {
-                    tempSudo[ij.i][ij.j] = 0;
-                    tryHistory.removeLast();
-                    if (tryHistory.size() === 0) {
-
-                        obj.onflish();
-                        return;
-                    }
-                    status = STATUS_BACK;
-                } else {
-
-                    tempSudo[ij.i][ij.j] = number;
-                    status = STATUS_KEEPGOING;
-                }
-            }
-
-        }
-
-        obj.onProgress(tempSudo);
-
-        if (obj.sudoIsTrue(tempSudo)) {
-            let end = obj.onFindAnswer(tempSudo);
-
-            if (end) {
+        var i = 0;
+        _while:while (++i < 185) { // 每次循环计算2000次。然后进行一次 settimeout 然后再执行本函数。 因为一但进入while，就被完全阻塞，外界对它不可控，因此必须提通过某种方式让外界有控制权。
+            var tryHistory = obj.__innerRunnParam.tryHistory;
+            var status = obj.__innerRunnParam.status;
+            var tempSudo = obj.__innerRunnParam.tempSudo;
+            var kill = obj.__innerRunnParam.kill;
+            if (kill) {
                 obj.onflish();
                 return;
             }
 
+            var ij = null;
 
-            for (let ind = tryHistory.size() - 1; ind >= 0; ind--) {
-                let ij2 = tryHistory.get(ind);
-                if (!ij2.hasNext()) {
-                    tryHistory.remove(ind);
-                    tempSudo[ij2.i][ij2.j] = 0;
-                } else {
-                    status = STATUS_BACK;
+            if (STATUS_KEEPGOING === status) {
+                ij = obj.getNextEmptyPosition(tempSudo);
+            } else if (STATUS_BACK === status) {
+                ij = tryHistory.get(tryHistory.size() - 1);
+            }
 
-                    obj.__innerRunnParam.tempSudo = tempSudo;
-                    obj.__innerRunnParam.status = status;
-                    obj.__innerRunnParam.tryHistory = tryHistory;
-                    setTimeout(obj.__innerRun, inner_run_dely);
+            if (ij) {
+
+                if (status === STATUS_KEEPGOING) {
+                    var nextNumber = ij.nextNumber();
+                    if (null == nextNumber) {
+                        if (obj.sudoIsTrue(tempSudo)) {
+
+                        } else {
+                            status = STATUS_BACK;
+                        }
+                    } else {
+                        tempSudo[ij.i][ij.j] = nextNumber;
+                        tryHistory.add(ij);
+                    }
+
+                } else if (status === STATUS_BACK) {
+
+                    var number = ij.nextNumber();
+
+                    if (null == number) {
+                        tempSudo[ij.i][ij.j] = 0;
+                        tryHistory.removeLast();
+                        if (tryHistory.size() === 0) {
+
+                            obj.onflish();
+                            return;
+                        }
+                        status = STATUS_BACK;
+                    } else {
+
+                        tempSudo[ij.i][ij.j] = number;
+                        status = STATUS_KEEPGOING;
+                    }
+                }
+
+            }
+
+            obj.onProgress(tempSudo);
+
+            if (obj.sudoIsTrue(tempSudo)) {
+                var end = obj.onFindAnswer(tempSudo);
+
+                if (end) {
+                    obj.onflish();
+                    return;
+                }
+
+
+                for (var ind = tryHistory.size() - 1; ind >= 0; ind--) {
+                    var ij2 = tryHistory.get(ind);
+                    if (!ij2.hasNext()) {
+                        tryHistory.remove(ind);
+                        tempSudo[ij2.i][ij2.j] = 0;
+                    } else {
+                        status = STATUS_BACK;
+
+                        obj.__innerRunnParam.tempSudo = tempSudo;
+                        obj.__innerRunnParam.status = status;
+                        obj.__innerRunnParam.tryHistory = tryHistory;
+                        // setTimeout(obj.__innerRun, inner_run_dely);
+                        // return;
+                        continue _while;
+                    }
+                }
+                obj.onflish();
+
+                return;
+
+            } else {
+                if (!ij) {
+                    obj.onflish();
                     return;
                 }
             }
-            obj.onflish();
 
-            return;
-
-        } else {
-            if (!ij) {
-                obj.onflish();
-                return;
-            }
+            obj.__innerRunnParam.tempSudo = tempSudo;
+            obj.__innerRunnParam.status = status;
+            obj.__innerRunnParam.tryHistory = tryHistory;
+            // setTimeout(obj.__innerRun, inner_run_dely);
         }
-
-        obj.__innerRunnParam.tempSudo = tempSudo;
-        obj.__innerRunnParam.status = status;
-        obj.__innerRunnParam.tryHistory = tryHistory;
         setTimeout(obj.__innerRun, inner_run_dely);
     };
 
@@ -255,15 +259,15 @@ function SudoSolver(sudo) {
     };
 
     obj.getNextEmptyPosition = function (sudo) {
-        let useAbleNumbersMostLessIJ = null;
-        for (let i = 0; i < sudo.length; i++)
-            for (let j = 0; j < sudo[i].length; j++) {
+        var useAbleNumbersMostLessIJ = null;
+        for (var i = 0; i < sudo.length; i++)
+            for (var j = 0; j < sudo[i].length; j++) {
                 if (sudo[i][j] === 0) {
 
                     if (!useAbleNumbersMostLessIJ) {
                         useAbleNumbersMostLessIJ = obj.newIJ(i, j, obj.findUseAbleNumbers(sudo, i, j));
                     } else {
-                        let useAbleNumbersIJ = obj.newIJ(i, j, obj.findUseAbleNumbers(sudo, i, j));
+                        var useAbleNumbersIJ = obj.newIJ(i, j, obj.findUseAbleNumbers(sudo, i, j));
                         if (useAbleNumbersIJ.size() < useAbleNumbersMostLessIJ.size()) {
                             useAbleNumbersMostLessIJ = useAbleNumbersIJ;
                         }
@@ -279,23 +283,23 @@ function SudoSolver(sudo) {
             throw new Error("这个位置已有数字：" + sudo[i][j]);
         }
 
-        let numbers = List();
-        for (let n = 1; n <= 9; n++)
+        var numbers = List();
+        for (var n = 1; n <= 9; n++)
             numbers.add(n);
 
-        for (let a = 0; a < sudo[i].length; a++) {
+        for (var a = 0; a < sudo[i].length; a++) {
             if (numbers.contains(sudo[i][a]))
                 numbers.remove(sudo[i][a]);
         }
 
-        for (let b = 0; b < sudo.length; b++) {
+        for (var b = 0; b < sudo.length; b++) {
             if (numbers.contains(sudo[b][j]))
                 numbers.remove(sudo[b][j]);
         }
 
-        let grid = obj.getGridArray(sudo, i, j);
+        var grid = obj.getGridArray(sudo, i, j);
 
-        for (let c = 0; c < grid.length; c++) {
+        for (var c = 0; c < grid.length; c++) {
             if (numbers.contains(grid[c]))
                 numbers.remove(grid[c]);
         }
@@ -304,12 +308,12 @@ function SudoSolver(sudo) {
     };
 
     obj.sudoIsTrue = function (sudo) {
-        let result = false;
+        var result = false;
 
         if (sudo == null) {
             return result;
         }
-        let i = 0;
+        var i = 0;
         for (; i < sudo.length; i++) {
             if (sudo[i].length !== 9) {
                 return result;
@@ -321,7 +325,7 @@ function SudoSolver(sudo) {
         }
 
         w: for (i = 0; i < sudo.length; i++) {
-            for (let j = 0; j < sudo[i].length; j++) {
+            for (var j = 0; j < sudo[i].length; j++) {
                 if (obj.isNumberTrueInRow(sudo, i, j)) {
                     if (obj.isNumberTrueInCol(sudo, i, j)) {
                         if (obj.isNumberTrueInGrid(sudo, i, j)) {
@@ -344,10 +348,10 @@ function SudoSolver(sudo) {
     };
 
     obj.isNumberTrueInRow = function (sudo, i, j) {
-        let result = false;
+        var result = false;
 
-        let row = sudo[i];
-        let num = row[j];
+        var row = sudo[i];
+        var num = row[j];
 
         if (0 === num) {
             return result;
@@ -358,13 +362,13 @@ function SudoSolver(sudo) {
         return result;
     };
     obj.isNumberTrueInCol = function (sudo, i, j) {
-        let result = false;
+        var result = false;
 
-        let col = [sudo[0][j], sudo[1][j], sudo[2][j],
+        var col = [sudo[0][j], sudo[1][j], sudo[2][j],
             sudo[3][j], sudo[4][j], sudo[5][j],
             sudo[6][j], sudo[7][j], sudo[8][j]];
 
-        let num = col[i];
+        var num = col[i];
 
         if (0 === num) {
             return result;
@@ -376,11 +380,11 @@ function SudoSolver(sudo) {
     };
 
     obj.isNumberTrueInGrid = function (sudo, i, j) {
-        let result = false;
+        var result = false;
 
-        let grid = obj.getGridArray(sudo, i, j);
+        var grid = obj.getGridArray(sudo, i, j);
 
-        let num = sudo[i][j];
+        var num = sudo[i][j];
 
         if (0 === num) {
             return result;
@@ -392,11 +396,11 @@ function SudoSolver(sudo) {
     };
 
     obj.numInArrayOnceOrNone = function (num, array) {
-        let count = 0;
+        var count = 0;
         if (num === 0) {
             return false;
         }
-        for (let i = 0; i < array.length; i++) {
+        for (var i = 0; i < array.length; i++) {
             if (num === array[i]) {
                 count++;
             }
@@ -405,76 +409,76 @@ function SudoSolver(sudo) {
     };
 
     obj.getGridArray = function (sudo, i, j) {
-        let grid = [];
+        var grid = [];
 
         if ((0 <= i && i <= 2) && (0 <= j && j <= 2)) {
-            let index = 0;
-            for (let h = 0; h <= 2; h++) {
-                for (let s = 0; s <= 2; s++) {
+            var index = 0;
+            for (var h = 0; h <= 2; h++) {
+                for (var s = 0; s <= 2; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((3 <= i && i <= 5) && (0 <= j && j <= 2)) {
-            let index = 0;
-            for (let h = 3; h <= 5; h++) {
-                for (let s = 0; s <= 2; s++) {
+            var index = 0;
+            for (var h = 3; h <= 5; h++) {
+                for (var s = 0; s <= 2; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((6 <= i && i <= 8) && (0 <= j && j <= 2)) {
-            let index = 0;
-            for (let h = 6; h <= 8; h++) {
-                for (let s = 0; s <= 2; s++) {
+            var index = 0;
+            for (var h = 6; h <= 8; h++) {
+                for (var s = 0; s <= 2; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((0 <= i && i <= 2) && (3 <= j && j <= 5)) {
-            let index = 0;
-            for (let h = 0; h <= 2; h++) {
-                for (let s = 3; s <= 5; s++) {
+            var index = 0;
+            for (var h = 0; h <= 2; h++) {
+                for (var s = 3; s <= 5; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((3 <= i && i <= 5) && (3 <= j && j <= 5)) {
-            let index = 0;
-            for (let h = 3; h <= 5; h++) {
-                for (let s = 3; s <= 5; s++) {
+            var index = 0;
+            for (var h = 3; h <= 5; h++) {
+                for (var s = 3; s <= 5; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((6 <= i && i <= 8) && (3 <= j && j <= 5)) {
-            let index = 0;
-            for (let h = 6; h <= 8; h++) {
-                for (let s = 3; s <= 5; s++) {
+            var index = 0;
+            for (var h = 6; h <= 8; h++) {
+                for (var s = 3; s <= 5; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((0 <= i && i <= 2) && (6 <= j && j <= 8)) {
-            let index = 0;
-            for (let h = 0; h <= 2; h++) {
-                for (let s = 6; s <= 8; s++) {
+            var index = 0;
+            for (var h = 0; h <= 2; h++) {
+                for (var s = 6; s <= 8; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((3 <= i && i <= 5) && (6 <= j && j <= 8)) {
-            let index = 0;
-            for (let h = 3; h <= 5; h++) {
-                for (let s = 6; s <= 8; s++) {
+            var index = 0;
+            for (var h = 3; h <= 5; h++) {
+                for (var s = 6; s <= 8; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
             }
         } else if ((6 <= i && i <= 8) && (6 <= j && j <= 8)) {
-            let index = 0;
-            for (let h = 6; h <= 8; h++) {
-                for (let s = 6; s <= 8; s++) {
+            var index = 0;
+            for (var h = 6; h <= 8; h++) {
+                for (var s = 6; s <= 8; s++) {
                     grid[index] = sudo[h][s];
                     index++;
                 }
@@ -485,8 +489,8 @@ function SudoSolver(sudo) {
         return grid;
     };
 
-    let IJ = function (i, j) {
-        let obj = {};
+    var IJ = function (i, j) {
+        var obj = {};
         obj.getValueBy = GET_VALUE_BY_RANDOM;
         obj.i = i;
         obj.j = j;
@@ -501,7 +505,7 @@ function SudoSolver(sudo) {
             if (obj.useAbleNumbers.size() < 1) {
                 return null;
             } else {
-                let nu;
+                var nu;
                 if (obj.getValueBy === GET_VALUE_BY_ORDER) {
                     nu = obj.useAbleNumbers.removeFirst();
                 } else if (obj.getValueBy === GET_VALUE_BY_RANDOM) {
@@ -533,4 +537,20 @@ function SudoSolver(sudo) {
     return obj;
 }
 
-export default SudoSolver;
+var ss;
+
+self.addEventListener("message", function (event) {
+    if (event.data.type === "findanswer") {
+        // console.log("worker:start")
+        ss = new SudoSolver(event.data.data);
+        ss.findAnswer({
+            onProgress(arr)   {self.postMessage({type: "sudo_onProgress",     data: arr}); },
+            onAnswerFind(arr) {self.postMessage({type: "sudo_onAnswerFind",   data: arr}); },
+            onFlish ()        {self.postMessage({type: "sudo_onFlish",        data: null});},
+        });
+    } else if (event.data.type === "stop") {
+        if (ss) {
+            ss.stopFind();
+        }
+    }
+});

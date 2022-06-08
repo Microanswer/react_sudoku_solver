@@ -22,5 +22,12 @@ button {
     line-height: 15px;
     display: inline-block;
     font-size: 13px;}
+.answeritem-col input {
+    width: 100%;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;display: block;
+}
 .spp {margin: -1px;}
 .soo {border-bottom: 1px solid gray;}

@@ -14,11 +14,11 @@ function About() {
                 <p style={{margin: "10px 30px"}}>你也可以什么都不输入，直接计算，但是这会产生很多个解，以至于网页都容纳不下来，随着解越来越多的被找到，计算速度也会逐渐降低。</p>
                 <p style={{margin: "10px 30px"}}>你也可以通过点击<button disabled={true}>生成</button>按钮来生成一个数独，然后再点击<button disabled={true}>计算</button>按钮来计算生成的数独。
                 请注意，自动生成的数独都是<b>地狱级</b>难度的，解答时间可能会超过10秒钟。</p>
-                <p style={{margin: "10px 30px"}}>本界面采用React制作。</p>
+                <p style={{margin: "10px 30px"}}>本界面采用React制作，最多只显示已找到的10个最新解。</p>
                 <ul style={{margin: "30px"}}>
-                    <li>博客：<a href={"https://www.microanswer.cn/blog/46"}>点击查看</a>。</li>
-                    <li>作者：<a href={"https://github.com/microAnswer"}>Microanswer</a>。</li>
-                    <li>作者网站：<a href={"https://www.microanswer.cn/"}>点击跳转</a>。</li>
+                    <li>代码：<a href={"https://www.microanswer.cn/blog/46"}>点击跳转</a></li>
+                    <li>网站：<a href={"https://www.microanswer.cn/"}>点击跳转</a></li>
+                    <li>Github：<a href={"https://github.com/microAnswer"}>Microanswer</a></li>
                 </ul>
 
             </div>
