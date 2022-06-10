@@ -108,7 +108,7 @@ function parseTimestamp2hhmmss(timestamp) {
     return hour + "'" + min + "'" + second + "." + minSecond;
 }
 
-let isRunning = false;
+window.isRunning = false;
 function Home() {
 
     const nav = useNavigate();
@@ -123,6 +123,8 @@ function Home() {
 
     const currentSudo = useRef(getEmptyArr());
     const [showCurrentSudo, setShowCurrentSudp] = useState(getEmptyArr());
+
+    const [showNoAnswer, setShowNoAnswer] = useState(false);
 
     const [startBtnDisabled, setStartBtnDisabled] = useState(false);
     const [stopBtnDisabled, setStopBtnDisabled] = useState(true);
@@ -150,7 +152,7 @@ function Home() {
     function onStopClick() {
         window.sudoWw.postMessage({type: "stop"});
         setStartBtnDisabled(false);
-        // isRunning = false;
+        // window.isRunning = false;
     }
 
     // 点击 计算
@@ -164,7 +166,7 @@ function Home() {
         gridRef.current.pinColor("blue");
         startTimeRef.current = Date.now();
 
-        isRunning = true;
+        window.isRunning = true;
         window.sudoWw.postMessage({type: "findanswer", data: currentSudo.current})
     }
 
@@ -178,7 +180,7 @@ function Home() {
             setShowCurrentSudp(currentSudo.current);
             setShowAnswerLength(answerslength.current);
             renderAnswer(answersRef.current);
-            if (isRunning) {
+            if (window.isRunning) {
                 setTimeHint("已用时：" + parseTimestamp2hhmmss(Date.now() - startTimeRef.current));
             }
             requestAnimationFrame(updateHint);
@@ -200,9 +202,11 @@ function Home() {
                 // console.log("解数量：" + answersRef.current.length);
                 // renderAnswer(event.data.data, parseTimestamp2hhmmss(Date.now() - startTimeRef.current));
             } else if (event.data.type === "sudo_onFlish") {
-                isRunning = false;
+                window.isRunning = false;
                 if (lastAnswerRef.current) {
                     currentSudo.current = (lastAnswerRef.current);
+                } else {
+                    setShowNoAnswer(true);
                 }
 
                 setClearBtnDisabled(false);
@@ -225,6 +229,7 @@ function Home() {
         setTimeHint("");
         answerslength.current = 0;
         currentSudo.current = (getEmptyArr());
+        setShowNoAnswer(false);
         lastAnswerRef.current = undefined;
         answersRef.current = [];
         answerRef.current.innerHTML = "";
@@ -242,7 +247,11 @@ function Home() {
 
     // 当手动手动输入内容时，会执行。
     function onValueChange(row, col, value) {
-        currentSudo.current[row][col] = parseInt(value);
+        if (value) {
+            currentSudo.current[row][col] = parseInt(value);
+        } else {
+            currentSudo.current[row][col] = 0;
+        }
         // currentSudo.current = (currentSudo);
     }
 
@@ -314,6 +323,7 @@ function Home() {
             </div>
             <div>
                 {showAnswerLength > 0 && <h2>已找到解 {showAnswerLength} 个</h2>}
+                {showNoAnswer && <h2>未找到可行解</h2>}
                 <div ref={answerRef}>
                     {/*{answers.map((answer,o) => {*/}
                     {/*    return (<div key={o} className={"answeritem"}>*/}

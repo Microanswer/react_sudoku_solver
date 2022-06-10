@@ -12,9 +12,57 @@ function Grid(props, ref) {
         refs.push(arr);
     }
 
+    function onKeyUp(row, col, keyCode) {
+        if (keyCode === 40) { // 下
+            focu(row + 1, col);
+        } else if (keyCode === 38) { // 上
+            focu(row - 1, col);
+        } else if (keyCode === 37 || keyCode === 8) { // 左
+            if (col === 0) {
+                col = 9;
+                row = row - 1;
+            }
+            focu(row, col - 1);
+        } else if (keyCode === 39 || keyCode === 13 || keyCode === 32) { // 右
+            if (col === 8) {
+                col = -1;
+                row = row+1;
+            }
+            focu(row, col + 1);
+        }
+    }
+
+    function focu(row, col) {
+        if (window.isRunning) {
+            return;
+        }
+        let rd = refs[row];
+        if(rd && rd[col]){
+            rd[col].current.$el?.focus();
+        }
+    }
+
+
     function onValueChange(row, col, value) {
         if (props.onValueChange) {
             props.onValueChange(row, col, value);
+
+            if (window.isRunning) {
+                return;
+            }
+            if (value) {
+                if (col === 8) {
+                    col = -1;
+                    row = row+1;
+                }
+                focu(row, col +1);
+            } else {
+                // if (col  === 0) {
+                //     col = 9;
+                //     row = row-1;
+                // }
+                // focu(row, col -1);
+            }
         }
     }
 
@@ -38,7 +86,7 @@ function Grid(props, ref) {
                 <div key={row} className={["grid-row", (row===2||row===5)?"grid-row-bottom-border-weight-1":'', row===0?"grid-row-start":"", row===8?"grid-row-end":""].join(" ")}>
                     {f.map((f,col) =>
                         <div key={col} className={["grid-col", (col===2||col===5)?"grid-col-right-border-weight-1":'', col===0?"grid-col-start":"", col === 8?'grid-col-end':''].join(" ")}>
-                            <GridInput ref={refs[row][col]} row={row} col={col} value={props.values[row][col]} onValueChange={onValueChange}/>
+                            <GridInput onKeyUp={onKeyUp} ref={refs[row][col]} row={row} col={col} value={props.values[row][col]} onValueChange={onValueChange}/>
                         </div>
                     )}
                 </div>
