@@ -1,4 +1,4 @@
-import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 function GridInput(props, ref) {
     const [color, setColor] = useState("black");
@@ -41,6 +41,9 @@ function GridInput(props, ref) {
         }
     }
 
+    function onBlur(){if (props.onBlur) {props.onBlur(props.row, props.col);}}
+    function onFocus(){if (props.onFocus) {props.onFocus(props.row, props.col);}}
+
     useImperativeHandle(ref, () => ({
         pinColor (color, forice) {
             if (value > 0 || forice) {
@@ -55,7 +58,7 @@ function GridInput(props, ref) {
 
 
     return (
-        <input ref={medom} style={{color: color}} value={value>0 && value<10?value:""} onChange={onChange} onKeyUp={onKeyUp}/>
+        <input ref={medom} style={{color: color}} value={value>0 && value<10?value:""} onChange={onChange} onKeyUp={onKeyUp}  onBlur={onBlur} onFocus={onFocus}/>
     );
 }
 

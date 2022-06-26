@@ -189,6 +189,7 @@ function Home() {
 
         window.sudoWw.onmessage = function (event) {
             if (event.data.type === "sudo_onProgress") {
+                window.isRunning = true;
                 currentSudo.current = event.data.data;
             } else if (event.data.type === "sudo_onAnswerFind") {
                 lastAnswerRef.current = event.data.data;

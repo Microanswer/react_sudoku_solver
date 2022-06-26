@@ -3,6 +3,12 @@ import GridInput from "./GridInput";
 import {forwardRef, useImperativeHandle, useRef} from "react";
 
 function Grid(props, ref) {
+    /**
+     * 标记我当前是否有焦点。 九宫格内任何一个输入框有焦点的情况，此字段就应该被置为true。 九宫格内任何一个输入框都没有焦点的情况，此字段就应该被置为false
+     * 当用户主动输入一个数字后，自动跳转到下一个输入框前，会 使用 focu 方法将指定格子进行聚焦从而让输入光标跳到下一个输入框。此字段在focu函数中使用，用于判断
+     * 是否允许进行此次对角操作。
+     */
+    let i_have_fcous = useRef(false);
     let refs = [];
     for (let i = 0; i < 9; i++) {
         let arr = [];
@@ -36,11 +42,18 @@ function Grid(props, ref) {
         if (window.isRunning) {
             return;
         }
+        if (!i_have_fcous.current) {
+            return;
+        }
+
         let rd = refs[row];
         if(rd && rd[col]){
             rd[col].current.$el?.focus();
         }
     }
+
+    function onBlur() {i_have_fcous.current = false;}
+    function onFocus() {i_have_fcous.current = true;}
 
 
     function onValueChange(row, col, value) {
@@ -86,7 +99,16 @@ function Grid(props, ref) {
                 <div key={row} className={["grid-row", (row===2||row===5)?"grid-row-bottom-border-weight-1":'', row===0?"grid-row-start":"", row===8?"grid-row-end":""].join(" ")}>
                     {f.map((f,col) =>
                         <div key={col} className={["grid-col", (col===2||col===5)?"grid-col-right-border-weight-1":'', col===0?"grid-col-start":"", col === 8?'grid-col-end':''].join(" ")}>
-                            <GridInput onKeyUp={onKeyUp} ref={refs[row][col]} row={row} col={col} value={props.values[row][col]} onValueChange={onValueChange}/>
+                            <GridInput
+                                onKeyUp={onKeyUp}
+                                ref={refs[row][col]}
+                                row={row}
+                                col={col}
+                                value={props.values[row][col]}
+                                onValueChange={onValueChange}
+                                onBlur={onBlur}
+                                onFocus={onFocus}
+                            />
                         </div>
                     )}
                 </div>
